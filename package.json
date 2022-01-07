@@ -9,8 +9,11 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "graphql": "^16.2.0",
+    "graphql-request": "^3.7.0",
     "mapbox-gl": "^2.3.1",
     "maplibre-gl": "^1.14.0",
+    "supercluster": "^7.1.4",
     "vue": "^2.6.11"
   },
   "devDependencies": {

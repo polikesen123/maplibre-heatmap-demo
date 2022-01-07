@@ -79,71 +79,74 @@ export default {
         this.initMap();
         const self = this;
         this.map.on("load", function () {
-            self.map.addSource("culture_gcj.mbtiles", {
+            self.map.addSource("park.mbtiles", {
                 type: "vector",
                 tiles: [
-                    `http://39.99.248.142/culture_gcj.mbtiles/{z}/{x}/{y}.pbf`,
+                    `http://192.168.1.150:8080/park.mbtiles/{z}/{x}/{y}.pbf`,
                 ],
                 cluster: true,
                 clusterMaxZoom: 14, // Max zoom to cluster points on
                 clusterRadius: 50,
             });
             self.map.addLayer({
-                id: "__world_heritage_layer__",
+                id: "__park_cirle_layer__",
                 type: "circle",
-                source: "culture_gcj.mbtiles",
-                "source-layer": "world_heritage",
+                source: "park.mbtiles",
+                "source-layer": "park",
                 paint: {
-                    "circle-color": "#FFA500",
-                    "circle-opacity": 0.8,
+                    "circle-color": "#ff0000",
+                    "circle-opacity": 0.5,
                 },
             });
             self.map.addLayer({
-                id: "__village_layer__",
-                type: "circle",
-                source: "culture_gcj.mbtiles",
-                "source-layer": "city_town_village",
-                filter: ["==","LX","历史文化名村"],
+                id: "__park_heatmap_layer__",
+                type: "heatmap",
+                source: "park.mbtiles",
+                "source-layer": "park",
                 paint: {
-                    "circle-color": "#008B8B",
-                    "circle-opacity": 0.8,
+                    // Increase the heatmap color weight weight by zoom level
+                    // heatmap-intensity is a multiplier on top of heatmap-weight
+                    "heatmap-radius": {
+                        stops: [
+                            [8, 8],
+                            [11, 18],
+                            [16, 40],
+                        ],
+                    },
+                    "heatmap-intensity": {
+                        stops: [
+                            [8, 1.0],
+                            [11, 3.0],
+                            [16, 5],
+                        ],
+                    },
+                    "heatmap-color": [
+                        "interpolate",
+                        ["linear"],
+                        ["heatmap-density"],
+                        0,
+                        "rgba(255,255,255,0)",
+                        0.35,
+                        defaultColor[0],
+                        0.6,
+                        defaultColor[1],
+                        0.75,
+                        defaultColor[2],
+                        0.9,
+                        defaultColor[3],
+                        1,
+                        defaultColor[4],
+                    ],
+                    "heatmap-opacity": {
+                        stops: [
+                            [8, 1],
+                            [11, 1],
+                            [16, 1],
+                        ],
+                    },
                 },
             });
-            self.map.addLayer({
-                id: "__city_layer__",
-                type: "circle",
-                source: "culture_gcj.mbtiles",
-                "source-layer": "city_town_village",
-                filter: ["==","LX","历史文化名城"],
-                paint: {
-                    "circle-color": "#A020F0",
-                    "circle-opacity": 0.8,
-                },
-            });
-            self.map.addLayer({
-                id: "__town_layer__",
-                type: "circle",
-                source: "culture_gcj.mbtiles",
-                "source-layer": "city_town_village",
-                filter: ["==","LX","历史文化名镇"],
-                paint: {
-                    "circle-color": "#FF6347",
-                    "circle-opacity": 0.8,
-                },
-            });
-            self.map.addLayer({
-                id: "__traditional_village_layer__",
-                type: "circle",
-                source: "culture_gcj.mbtiles",
-                "source-layer": "traditional_village",
-                paint: {
-                    "circle-color": "#FFFF00",
-                    "circle-opacity": 0.8,
-                },
-            });
-            self.map.on('click','__city_town_village_layer__',(e)=>{
-                console.log(e.features[0])
-            })
+            console.log(self.map.getLayer("__park_heatmap_layer__"));
         });
     },
 };
