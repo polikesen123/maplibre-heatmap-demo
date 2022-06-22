@@ -4,7 +4,8 @@
 
 <script>
 const Host = "http://192.168.1.151:5588";
-const token = `eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJkNjFhNGNkNi00NzJiLTQ5ODQtOTIyMi0wZjRlMjJiZDQ4OTQiLCJpYXQiOjE2NDQ1NDQyNjgsInN1YiI6IjQwNjAzODE4OTc2MTgzOTEwNCIsImlzcyI6InJhbmV2IiwibG9naW5OYW1lIjoiYWRtaW4iLCJ1c2VySWQiOjQwNjAzODE4OTc2MTgzOTEwNCwiZXhwIjoxNjQ0NjA0MjY4fQ.o2tPUxnZc7Xzo4R10SUeF8iIX9Mh67mM5ew_RVgh3tg`;
+// const Host = "http://www.r-t-m.cn";
+const token = `eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwMzdmZTNmMy1mNDUzLTQwOTgtOGY4Yi1lNjFkYTIzY2I3ZWEiLCJpc3MiOiJyYW5ldiIsInN1YiI6NTc1MTgxNjY1MzQzMTE5MzYwLCJleHAiOjE2NDk0MTU1MDEsInVzZXJJZCI6NTc1MTgxNjY1MzQzMTE5MzYwLCJ1c2VyTmFtZSI6InRlc3RUZXN0IiwibG9naW5OYW1lIjoidGVzdF90ZXN0IiwiY2l0aWVzIjpbIjQ0MDEwMCIsIjQ0MDMwMCIsIjExMDA5OSIsIjMxMDA5OSJdLCJ2ZWhNb2RlbHMiOlsiLTEiXSwiaWF0IjoxNjQ5NDE1MjkxfQ.Oxs6xBo98-j4AnP6Myob4KDw4ghRUBpLjNkYCLYE6qQ`;
 // heatmap图层
 const HEAT_MAP_SOURCE_ID = "__heat_map_source__";
 const HEAT_MAP_SOURCE_LAYER = "h3";
@@ -12,12 +13,9 @@ const HEAT_MAP_LAYER_ID = "__heat_map_layer_id__"; // 1-11 显示aoi热力图
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { GraphQLClient, gql } from "graphql-request";
-const ownerClient = new GraphQLClient(
-    `${Host}/owner/graphql?token=${token}`,
-    {
-        headers: {},
-    }
-);
+const ownerClient = new GraphQLClient(`${Host}/owner/graphql?token=${token}`, {
+    headers: {},
+});
 const geoqGray = {
     name: "geoqGray",
     version: 8,
@@ -42,7 +40,7 @@ const geoqGray = {
     maxZoom: 15.45,
     minZoom: 0,
 };
-let tileUrl = `${Host}/owner/openapi/heatmaps/142620935/{z}/{x}/{y}.pbf?token=${token}`;
+let tileUrl = `${Host}/owner/openapi/heatmaps/488128933/{z}/{x}/{y}.pbf?token=${token}`;
 const defaultColor = [
     "rgba(23, 72, 112, 0.75)",
     "rgba(50, 140, 138, 0.75)",
@@ -105,11 +103,11 @@ const cluster = new Supercluster({
     },
 });
 const profile = {
-    city: "110099",
+    city: "310099",
     lifeCycle: {
-        feature: "life",
-        life: {
-            indicator: "times",
+        feature: "resident",
+        resident: {
+            aoi: "",
         },
     },
     raBusinessArea: "",
@@ -144,7 +142,8 @@ export default {
                 // this.getHeatMapConfig(profile, map);
                 // this.changeHeatMapStyle(map);
                 // console.log("zoomend", map.getBounds());
-                this.changeUrlBounds()
+                this.changeUrlBounds();
+                this.changeHeatMapStyle(map);
             });
             map.on("dataloading", () => {
                 // console.log("-----------data loaded----------");
@@ -156,11 +155,12 @@ export default {
                 // cluster.load(features);
                 // var clusters = cluster.getClusters([-180, -85, 180, 85], 2);
                 // console.log(clusters);
-                this.changeHeatMapStyle(map);
+                // this.changeHeatMapStyle(map);
                 // console.log(cluster.radius)
             });
             map.on("moveend", () => {
-                this.changeUrlBounds()
+                this.changeUrlBounds();
+                this.changeHeatMapStyle(map);
             });
         },
         addHeatMap() {
@@ -177,14 +177,7 @@ export default {
                 "source-layer": HEAT_MAP_SOURCE_LAYER,
                 paint: {
                     // Increase the heatmap weight based on frequency and property magnitude
-                    "heatmap-weight": {
-                        property: "m",
-                        type: "exponential",
-                        stops: [
-                            [1, 0],
-                            [30000, 1],
-                        ],
-                    },
+                    "heatmap-weight": ["get", "m"],
                     // Increase the heatmap color weight weight by zoom level
                     // heatmap-intensity is a multiplier on top of heatmap-weight
                     "heatmap-intensity": {
@@ -289,7 +282,7 @@ export default {
             if (max === Infinity) return;
             if (min === Infinity) return;
             let zoom = map.getZoom();
-            let radius = 90;
+            let radius = 100;
             console.log("zoom:", zoom);
             let paint = [
                 "interpolate",
@@ -309,7 +302,9 @@ export default {
             var bounds = map.getBounds().toArray();
             if (map.getSource(HEAT_MAP_SOURCE_ID)) {
                 map.getSource(HEAT_MAP_SOURCE_ID).tiles = [
-                    `${Host}/owner/openapi/heatmaps/142620935/{z}/{x}/{y}.pbf?bounds=${JSON.stringify(bounds)}&token=${token}`,
+                    `${Host}/owner/openapi/heatmaps/488128933/{z}/{x}/{y}.pbf?bounds=${JSON.stringify(
+                        bounds
+                    )}&token=${token}`,
                 ];
                 map.style.sourceCaches[HEAT_MAP_SOURCE_ID].clearTiles();
                 map.style.sourceCaches[HEAT_MAP_SOURCE_ID].update(

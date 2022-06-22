@@ -79,88 +79,88 @@ export default {
         this.initMap();
         const self = this;
         this.map.on("load", function () {
-            // self.map.addSource("culture_gcj.mbtiles", {
-            //     type: "vector",
-            //     tiles: [
-            //         `http://39.99.248.142/culture_gcj.mbtiles/{z}/{x}/{y}.pbf`,
-            //     ],
-            //     cluster: true,
-            //     clusterMaxZoom: 14, // Max zoom to cluster points on
-            //     clusterRadius: 50,
-            // });
-            // self.map.addLayer({
-            //     id: "__world_heritage_layer__",
-            //     type: "circle",
-            //     source: "culture_gcj.mbtiles",
-            //     "source-layer": "world_heritage",
-            //     paint: {
-            //         "circle-color": "#FFA500",
-            //         "circle-opacity": 0.8,
-            //     },
-            // });
-            // self.map.addLayer({
-            //     id: "__village_layer__",
-            //     type: "circle",
-            //     source: "culture_gcj.mbtiles",
-            //     "source-layer": "city_town_village",
-            //     filter: ["==", "LX", "历史文化名村"],
-            //     paint: {
-            //         "circle-color": "#008B8B",
-            //         "circle-opacity": 0.8,
-            //     },
-            // });
-            // self.map.addLayer({
-            //     id: "__city_layer__",
-            //     type: "circle",
-            //     source: "culture_gcj.mbtiles",
-            //     "source-layer": "city_town_village",
-            //     filter: ["==", "LX", "历史文化名城"],
-            //     paint: {
-            //         "circle-color": "#A020F0",
-            //         "circle-opacity": 0.8,
-            //     },
-            // });
-            // self.map.addLayer({
-            //     id: "__town_layer__",
-            //     type: "circle",
-            //     source: "culture_gcj.mbtiles",
-            //     "source-layer": "city_town_village",
-            //     filter: ["==", "LX", "历史文化名镇"],
-            //     paint: {
-            //         "circle-color": "#FF6347",
-            //         "circle-opacity": 0.8,
-            //     },
-            // });
-            // self.map.addLayer({
-            //     id: "__traditional_village_layer__",
-            //     type: "circle",
-            //     source: "culture_gcj.mbtiles",
-            //     "source-layer": "traditional_village",
-            //     paint: {
-            //         "circle-color": "#FFFF00",
-            //         "circle-opacity": 0.8,
-            //     },
-            // });
+            self.map.addSource("culture_gcj.mbtiles", {
+                type: "vector",
+                tiles: [
+                    `http://118.195.153.84/culture_gcj.mbtiles/{z}/{x}/{y}.pbf`,
+                ],
+                cluster: true,
+                clusterMaxZoom: 14, // Max zoom to cluster points on
+                clusterRadius: 50,
+            });
+            self.map.addLayer({
+                id: "__world_heritage_layer__",
+                type: "circle",
+                source: "culture_gcj.mbtiles",
+                "source-layer": "world_heritage",
+                paint: {
+                    "circle-color": "#FFA500",
+                    "circle-opacity": 0.8,
+                },
+            });
+            self.map.addLayer({
+                id: "__village_layer__",
+                type: "circle",
+                source: "culture_gcj.mbtiles",
+                "source-layer": "city_town_village",
+                filter: ["==", "LX", "历史文化名村"],
+                paint: {
+                    "circle-color": "#008B8B",
+                    "circle-opacity": 0.8,
+                },
+            });
+            self.map.addLayer({
+                id: "__city_layer__",
+                type: "circle",
+                source: "culture_gcj.mbtiles",
+                "source-layer": "city_town_village",
+                filter: ["==", "LX", "历史文化名城"],
+                paint: {
+                    "circle-color": "#A020F0",
+                    "circle-opacity": 0.8,
+                },
+            });
+            self.map.addLayer({
+                id: "__town_layer__",
+                type: "circle",
+                source: "culture_gcj.mbtiles",
+                "source-layer": "city_town_village",
+                filter: ["==", "LX", "历史文化名镇"],
+                paint: {
+                    "circle-color": "#FF6347",
+                    "circle-opacity": 0.8,
+                },
+            });
+            self.map.addLayer({
+                id: "__traditional_village_layer__",
+                type: "circle",
+                source: "culture_gcj.mbtiles",
+                "source-layer": "traditional_village",
+                paint: {
+                    "circle-color": "#FFFF00",
+                    "circle-opacity": 0.8,
+                },
+            });
             // self.map.on("click", "__world_heritage_layer__", (e) => {
             //     console.log(e.features[0].properties);
             // });
-            self.map.addSource("deepcity.mbtiles", {
-                type: "vector",
-                tiles: [
-                    `http://39.99.248.142/deepcity.mbtiles/{z}/{x}/{y}.pbf`,
-                ],
-            });
-            self.map.addLayer({
-                id: "__deepcity_layer__",
-                type: "circle",
-                source: "deepcity.mbtiles",
-                "source-layer": "deepcity",
-                paint: {
-                    "circle-color": "#00FFFF",
-                    "circle-opacity": 0.8,
-                    "circle-radius": 20,
-                },
-            });
+            // self.map.addSource("deepcity.mbtiles", {
+            //     type: "vector",
+            //     tiles: [
+            //         `http://118.195.153.84/deepcity.mbtiles/{z}/{x}/{y}.pbf`,
+            //     ],
+            // });
+            // self.map.addLayer({
+            //     id: "__deepcity_layer__",
+            //     type: "circle",
+            //     source: "deepcity.mbtiles",
+            //     "source-layer": "deepcity",
+            //     paint: {
+            //         "circle-color": "#00FFFF",
+            //         "circle-opacity": 0.8,
+            //         "circle-radius": 20,
+            //     },
+            // });
         });
     },
 };
